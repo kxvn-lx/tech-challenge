@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,8 @@
 		0A0987482553CDBA00468153 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A0987462553CDBA00468153 /* Main.storyboard */; };
 		0A09874A2553CDBB00468153 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A0987492553CDBB00468153 /* Assets.xcassets */; };
 		0A09874D2553CDBB00468153 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A09874B2553CDBB00468153 /* LaunchScreen.storyboard */; };
+		0A09875A2553CEF300468153 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0987592553CEF300468153 /* SnapKit */; };
+		0A666EDC2553D00D00953CB7 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A666EDB2553D00D00953CB7 /* PreviewView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,7 @@
 		0A0987492553CDBB00468153 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0A09874C2553CDBB00468153 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0A09874E2553CDBB00468153 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0A666EDB2553D00D00953CB7 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A09875A2553CEF300468153 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,15 +60,40 @@
 		0A09873F2553CDBA00468153 /* tech-challenge */ = {
 			isa = PBXGroup;
 			children = (
+				0A0987552553CDC800468153 /* App */,
 				0A0987402553CDBA00468153 /* AppDelegate.swift */,
 				0A0987422553CDBA00468153 /* SceneDelegate.swift */,
-				0A0987442553CDBA00468153 /* ViewController.swift */,
 				0A0987462553CDBA00468153 /* Main.storyboard */,
 				0A0987492553CDBB00468153 /* Assets.xcassets */,
 				0A09874B2553CDBB00468153 /* LaunchScreen.storyboard */,
 				0A09874E2553CDBB00468153 /* Info.plist */,
 			);
 			path = "tech-challenge";
+			sourceTree = "<group>";
+		};
+		0A0987552553CDC800468153 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				0A666EDA2553CFB500953CB7 /* Preview View */,
+				0A666ED92553CFAF00953CB7 /* Home */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		0A666ED92553CFAF00953CB7 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				0A0987442553CDBA00468153 /* ViewController.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		0A666EDA2553CFB500953CB7 /* Preview View */ = {
+			isa = PBXGroup;
+			children = (
+				0A666EDB2553D00D00953CB7 /* PreviewView.swift */,
+			);
+			path = "Preview View";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -77,12 +106,16 @@
 				0A0987392553CDBA00468153 /* Sources */,
 				0A09873A2553CDBA00468153 /* Frameworks */,
 				0A09873B2553CDBA00468153 /* Resources */,
+				0A666EDE2553D07D00953CB7 /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = "tech-challenge";
+			packageProductDependencies = (
+				0A0987592553CEF300468153 /* SnapKit */,
+			);
 			productName = "tech-challenge";
 			productReference = 0A09873D2553CDBA00468153 /* tech-challenge.app */;
 			productType = "com.apple.product-type.application";
@@ -110,6 +143,9 @@
 				Base,
 			);
 			mainGroup = 0A0987342553CDBA00468153;
+			packageReferences = (
+				0A0987582553CEF300468153 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 0A09873E2553CDBA00468153 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -132,12 +168,33 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0A666EDE2553D07D00953CB7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		0A0987392553CDBA00468153 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				0A0987452553CDBA00468153 /* ViewController.swift in Sources */,
+				0A666EDC2553D00D00953CB7 /* PreviewView.swift in Sources */,
 				0A0987412553CDBA00468153 /* AppDelegate.swift in Sources */,
 				0A0987432553CDBA00468153 /* SceneDelegate.swift in Sources */,
 			);
@@ -341,6 +398,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0A0987582553CEF300468153 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0A0987592553CEF300468153 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0A0987582553CEF300468153 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0A0987352553CDBA00468153 /* Project object */;
 }
