@@ -46,45 +46,19 @@ class HomeViewController: UIViewController {
     
     /// Observe the editor's sliders value change
     private func observeEditorSliders() {
+        // We use unowned because we presumes it wil never be nil during its lifetime. (because always active)
+        // Called whenever hue slider changed its value
         editorVC.didUpdateHue
             .handleEvents(receiveOutput: { [unowned self] hueValue in
-//                let source = self.previewView.baseImage!
-//
-//                let imageSize = source.size
-//                let imageExtent = CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height)
-//
-//                // Create a context containing the image.
-//                UIGraphicsBeginImageContext(imageSize)
-//                let context = UIGraphicsGetCurrentContext()
-//                source.draw(at: CGPoint(x: 0, y: 0))
-//
-//                // Draw the hue on top of the image.
-//                context?.setBlendMode(.hue)
-//                UIColor(hue: hueValue, saturation: 1.0, brightness: 1, alpha: 1).set()
-//                let imagePath = UIBezierPath(rect: imageExtent)
-//                imagePath.fill()
-//
-//                // Retrieve the new image.
-//                let result = UIGraphicsGetImageFromCurrentImageContext()
-//                UIGraphicsEndImageContext()
-//
-//                self.previewView.tempImage = result
-            })
-            .sink { _ in }
-            .store(in: &subscriptions)
-        
-        let context = CIContext()
-        
-        let brightnessFilter = CIFilter(name: "CIColorControls")!
-//        brightnessFilter.setValue(CIImage(cgImage: self.previewView.baseImage!.cgImage!), forKey: "inputImage")
-        
-        editorVC.didUpdateBrightness
-            .handleEvents(receiveOutput: { [unowned self] brightnessValue in
-//                brightnessFilter.setValue(Float(brightnessValue), forKey: "inputBrightness")
-//                let outputImage = brightnessFilter.outputImage
-//
-//                let imageRef = context.createCGImage(outputImage!, from: outputImage!.extent)
-//                self.previewView.tempImage = UIImage(cgImage: imageRef!)
+                let sourceImage = self.previewView.ciBaseImage
+                let hueAdjust = CIFilter(name: "CIHueAdjust")
+                
+                hueAdjust?.setDefaults()
+                hueAdjust?.setValue(sourceImage, forKey: "inputImage")
+                hueAdjust?.setValue(hueValue, forKey: "inputAngle")
+                
+                guard let resultImage = hueAdjust?.value(forKey: "outputImage") as? CIImage else { return }
+                self.previewView.tempImage = resultImage
             })
             .sink { _ in }
             .store(in: &subscriptions)

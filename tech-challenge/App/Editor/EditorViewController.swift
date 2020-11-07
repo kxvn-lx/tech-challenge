@@ -11,7 +11,9 @@ import Combine
 class EditorViewController: UIViewController {
     private let hueSlider: GradientSlider = {
         let slider = GradientSlider()
-        slider.value = slider.maximumValue / 2
+        slider.maximumValue = CGFloat.pi
+        slider.minimumValue = -CGFloat.pi
+        slider.value = 0
         slider.thumbColor = UIColor(hue: slider.value, saturation: 1, brightness: 1, alpha: 1)
         slider.hasRainbow = true
         return slider
@@ -24,7 +26,9 @@ class EditorViewController: UIViewController {
         let slider = GradientSlider()
         return slider
     }()
+    
     private var mStackView: UIStackView!
+    private let bigThumbSize: CGFloat = 1.5
     
     var didUpdateHue = PassthroughSubject<CGFloat, Never>()
     var didUpdateSaturation = PassthroughSubject<CGFloat, Never>()
@@ -72,9 +76,11 @@ class EditorViewController: UIViewController {
             guard let self = self else { return }
             
             // Update the thumb color to match the value
-            slider.thumbColor = UIColor(hue: value, saturation: 1, brightness: 1, alpha: 1)
+            // We convert the value to 0 and 1, to match the slider's colour.
+            let convertedHueValue = self.convert(value, fromOldRange: [-CGFloat.pi, CGFloat.pi], toNewRange: [0, 1])
+            slider.thumbColor = UIColor(hue: convertedHueValue, saturation: 1, brightness: 1, alpha: 1)
             // Animate the thumb size
-            slider.thumbSize = finished ? GradientSlider.defaultThumbSize : GradientSlider.defaultThumbSize * 1.5
+            slider.thumbSize = finished ? GradientSlider.defaultThumbSize : GradientSlider.defaultThumbSize * self.bigThumbSize
          
             self.didUpdateHue.send(value)
         }
@@ -82,7 +88,7 @@ class EditorViewController: UIViewController {
         brightSlider.actionBlock = { [weak self] slider, value, finished in
             guard let self = self else { return }
             
-            slider.thumbSize = finished ? GradientSlider.defaultThumbSize : GradientSlider.defaultThumbSize * 1.5
+            slider.thumbSize = finished ? GradientSlider.defaultThumbSize : GradientSlider.defaultThumbSize * self.bigThumbSize
             self.didUpdateBrightness.send(value)
         }
     }
@@ -114,5 +120,23 @@ class EditorViewController: UIViewController {
         stackView.spacing = 10
         
         return stackView
+    }
+    
+    /// Linear conversion in Swift. Converting a value from the old range to the new range.
+    /// Example: get the value from an old range of 0 - 10 to a new range of 0 - 1
+    /// - Parameters:
+    ///   - oldValue: The old value. This value will then be converted to the enw range value.
+    ///   - oldRange: The old range array. MUST be only consisting of 2 value. [oldMin, oldMax]
+    ///   - newRange: The new range arary. MUSt be only consisting of 2 value. [newMin, newMax]
+    /// - Returns: The converted value
+    private func convert(_ oldValue: CGFloat, fromOldRange oldRange: [CGFloat], toNewRange newRange: [CGFloat]) -> CGFloat {
+        guard oldRange.count == 2, newRange.count == 2 else { fatalError("The ranges must only consist of 2 value.") }
+        guard oldRange[1] > oldRange[0], newRange[1] > newRange[0] else { fatalError("The last index must be bigger!") }
+        
+        let oldRangeDiff = oldRange[1] - oldRange[0]
+        let newRangeDiff = newRange[1] - newRange[0]
+        
+        let a = (oldValue - oldRange[0]) * newRangeDiff
+        return (a / oldRangeDiff) + newRange[0]
     }
 }

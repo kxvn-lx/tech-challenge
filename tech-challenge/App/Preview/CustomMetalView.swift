@@ -43,6 +43,7 @@ class CustomMetalView: MTKView {
     }
     
     override func draw() {
+        print("draw")
         guard let image = self.image,
               let texture = self.currentDrawable?.texture,
               let buffer = self.queue?.makeCommandBuffer(),
