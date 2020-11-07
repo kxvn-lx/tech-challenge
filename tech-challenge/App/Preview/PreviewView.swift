@@ -6,16 +6,16 @@
 //
 
 import UIKit
+import MetalKit
 
 class PreviewView: UIView {
-    private let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
-    private let baseImage = UIImage(named: "Neon-Source")
-    // TempImage will store the edited image so that we can preview them easily
-    private var tempImage: UIImage?
+    let ciBaseImage = CIImage(cgImage: UIImage(named: "Neon-Source")!.cgImage!)
+    var tempImage: CIImage? { // TempImage will store the edited image so that we can preview them easily
+        didSet {
+        }
+    }
+    
+    private let metalView = CustomMetalView(frame: .zero, device: MTLCreateSystemDefaultDevice())
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,13 +29,14 @@ class PreviewView: UIView {
     
     /// Setup the view and layout
     private func setupView() {
-        imageView.image = baseImage
-        addSubview(imageView)
+        addSubview(metalView)
+        
+        metalView.image = ciBaseImage
     }
     
     /// Setup the constraint of the view
     private func setupConstraint() {
-        imageView.snp.makeConstraints { (make) in
+        metalView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
     }

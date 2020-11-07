@@ -8,12 +8,12 @@
 
 import UIKit
 
-// From https://github.com/jonhull/GradientSlider
+// From https://github.com/jonhull/GradientSlider (modified to suite the app's need)
 // Better custom UISlider
 @IBDesignable class GradientSlider: UIControl {
     
     static var defaultThickness: CGFloat = 2.0
-    static var defaultThumbSize: CGFloat = 28.0
+    static var defaultThumbSize: CGFloat = 15.0
     
     // MARK: Properties
     @IBInspectable public var hasRainbow: Bool  = false {didSet {updateTrackColors()}}

@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import Combine
 
 class EditorViewController: UIViewController {
     private let hueSlider: GradientSlider = {
         let slider = GradientSlider()
+        slider.value = slider.maximumValue / 2
+        slider.thumbColor = UIColor(hue: slider.value, saturation: 1, brightness: 1, alpha: 1)
         slider.hasRainbow = true
         return slider
     }()
@@ -23,11 +26,16 @@ class EditorViewController: UIViewController {
     }()
     private var mStackView: UIStackView!
     
+    var didUpdateHue = PassthroughSubject<CGFloat, Never>()
+    var didUpdateSaturation = PassthroughSubject<CGFloat, Never>()
+    var didUpdateBrightness = PassthroughSubject<CGFloat, Never>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupView()
         setupConstraint()
+        observeSlider()
     }
     
     private func setupView() {
@@ -36,7 +44,7 @@ class EditorViewController: UIViewController {
         let blurredEffectView = UIVisualEffectView(effect: blurEffect)
         blurredEffectView.frame = self.view.bounds
         view.addSubview(blurredEffectView)
-
+        
         // Setup master stackviews
         let hueSV = createSliderStack(withSlider: hueSlider, withTitle: "Hue")
         let satSV = createSliderStack(withSlider: satSlider, withTitle: "Saturation")
@@ -55,6 +63,27 @@ class EditorViewController: UIViewController {
             make.center.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(0.5)
             make.height.equalToSuperview().multipliedBy(0.75)
+        }
+    }
+    
+    /// Observe all three slider changes
+    private func observeSlider() {
+        hueSlider.actionBlock = { [weak self] slider, value, finished in
+            guard let self = self else { return }
+            
+            // Update the thumb color to match the value
+            slider.thumbColor = UIColor(hue: value, saturation: 1, brightness: 1, alpha: 1)
+            // Animate the thumb size
+            slider.thumbSize = finished ? GradientSlider.defaultThumbSize : GradientSlider.defaultThumbSize * 1.5
+         
+            self.didUpdateHue.send(value)
+        }
+        
+        brightSlider.actionBlock = { [weak self] slider, value, finished in
+            guard let self = self else { return }
+            
+            slider.thumbSize = finished ? GradientSlider.defaultThumbSize : GradientSlider.defaultThumbSize * 1.5
+            self.didUpdateBrightness.send(value)
         }
     }
     
