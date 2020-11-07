@@ -8,7 +8,6 @@
 import UIKit
 
 class EditorViewController: UIViewController {
-    
     private let hueSlider: GradientSlider = {
         let slider = GradientSlider()
         slider.hasRainbow = true
