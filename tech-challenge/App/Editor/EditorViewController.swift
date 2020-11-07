@@ -22,9 +22,9 @@ class EditorViewController: UIViewController {
         let blurredEffectView = UIVisualEffectView(effect: blurEffect)
         blurredEffectView.frame = self.view.bounds
         view.addSubview(blurredEffectView)
+
     }
     
     private func setupConstraint() {
-        
     }
 }

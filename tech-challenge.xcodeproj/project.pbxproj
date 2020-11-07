@@ -17,6 +17,7 @@
 		0A666EDC2553D00D00953CB7 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A666EDB2553D00D00953CB7 /* PreviewView.swift */; };
 		0ABE38B52553D57E00BC039C /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38B42553D57E00BC039C /* EditorViewController.swift */; };
 		0ABE38BA2553D5BB00BC039C /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38B92553D5BB00BC039C /* UIViewController.swift */; };
+		0ABE38C12553DE2400BC039C /* GradientSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38C02553DE2400BC039C /* GradientSlider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		0A666EDB2553D00D00953CB7 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		0ABE38B42553D57E00BC039C /* EditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		0ABE38B92553D5BB00BC039C /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
+		0ABE38C02553DE2400BC039C /* GradientSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientSlider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 		0ABE38B32553D54F00BC039C /* Editor */ = {
 			isa = PBXGroup;
 			children = (
+				0ABE38C02553DE2400BC039C /* GradientSlider.swift */,
 				0ABE38B42553D57E00BC039C /* EditorViewController.swift */,
 			);
 			path = Editor;
@@ -221,6 +224,7 @@
 				0A0987412553CDBA00468153 /* AppDelegate.swift in Sources */,
 				0ABE38B52553D57E00BC039C /* EditorViewController.swift in Sources */,
 				0A0987432553CDBA00468153 /* SceneDelegate.swift in Sources */,
+				0ABE38C12553DE2400BC039C /* GradientSlider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
