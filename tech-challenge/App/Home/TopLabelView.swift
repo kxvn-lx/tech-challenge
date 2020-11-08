@@ -16,6 +16,11 @@ class TopLabelView: UIView {
         label.textColor = .white
         return label
     }()
+    private let blurredEffectView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .dark)
+        let blurredEffectView = UIVisualEffectView(effect: blurEffect)
+        return blurredEffectView
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,15 +35,11 @@ class TopLabelView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        // Setup blur
-        let blurEffect = UIBlurEffect(style: .dark)
-        let blurredEffectView = UIVisualEffectView(effect: blurEffect)
         blurredEffectView.frame = self.bounds
-        
-        insertSubview(blurredEffectView, at: 0)
     }
     
     private func setupView() {
+        addSubview(blurredEffectView)
         addSubview(label)
     }
     
