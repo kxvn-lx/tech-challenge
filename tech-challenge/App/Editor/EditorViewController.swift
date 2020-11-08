@@ -20,8 +20,12 @@ class EditorViewController: UIViewController {
     }()
     private let satSlider: GradientSlider = {
         let slider = GradientSlider()
-        slider.minColor = .gray
-        slider.maxColor = UIColor(hue: 0, saturation: 1, brightness: 1, alpha: 1)
+        slider.minimumValue = 0
+        slider.maximumValue = 2
+        slider.value = 1
+        slider.minColor =  UIColor(hue: 0, saturation: slider.minimumValue, brightness: 1, alpha: 1)
+        slider.maxColor = UIColor(hue: 0, saturation: slider.maximumValue, brightness: 1, alpha: 1)
+        slider.thumbColor = UIColor(hue: 0, saturation: slider.value, brightness: 1, alpha: 1)
         return slider
     }()
     private let brightSlider: GradientSlider = {
@@ -29,6 +33,7 @@ class EditorViewController: UIViewController {
         slider.minimumValue = -0.5
         slider.maximumValue = 0.5
         slider.value = 0
+        slider.thumbColor = UIColor(hue: 0, saturation: 0, brightness: 0.5, alpha: 1)
         slider.minColor = .black
         slider.maxColor = .white
         return slider
@@ -37,8 +42,11 @@ class EditorViewController: UIViewController {
     private var mStackView: UIStackView!
     private let bigThumbSize: CGFloat = 1.5
     
+    /// Called whenever there is a new Hue value
     var didUpdateHue = PassthroughSubject<CGFloat, Never>()
+    /// Called whenever there is a new Saturation value
     var didUpdateSaturation = PassthroughSubject<CGFloat, Never>()
+    /// Called whenever there is a new Brightness value
     var didUpdateBrightness = PassthroughSubject<CGFloat, Never>()
     
     override func viewDidLoad() {
@@ -82,19 +90,19 @@ class EditorViewController: UIViewController {
         hueSlider.actionBlock = { [weak self] slider, value, finished in
             guard let self = self else { return }
             // We convert the value to 0 and 1, to match the slider's colour.
-            let convertedHueValue = self.convert(value, fromOldRange: [-CGFloat.pi, CGFloat.pi], toNewRange: [0, 1])
+            let convertedHueValue = self.convert(self.hueSlider.value, fromOldRange: [slider.minimumValue, slider.maximumValue], toNewRange: [0, 1])
             
             CATransaction.begin()
             CATransaction.setValue(true, forKey: kCATransactionDisableActions)
             
             //Reflect the new hue in the saturation slider
             self.satSlider.maxColor = UIColor(hue: convertedHueValue, saturation: 1, brightness: 1, alpha: 1)
+            self.satSlider.thumbColor = UIColor(hue: convertedHueValue, saturation: self.satSlider.value, brightness: 1, alpha: 1)
             
             // Update the thumb color to match the value
             slider.thumbColor = UIColor(hue: convertedHueValue, saturation: 1, brightness: 1, alpha: 1)
-            
             slider.thumbSize = finished ? GradientSlider.defaultThumbSize : GradientSlider.defaultThumbSize * self.bigThumbSize
-         
+            
             self.didUpdateHue.send(value)
             
             CATransaction.commit()
@@ -102,18 +110,36 @@ class EditorViewController: UIViewController {
         
         satSlider.actionBlock = { [weak self] slider, value, finished in
             guard let self = self else { return }
+            let convertedHueValue = self.convert(
+                self.hueSlider.value,
+                fromOldRange: [self.hueSlider.minimumValue, self.hueSlider.maximumValue],
+                toNewRange: [0, 1]
+            )
             
+            CATransaction.begin()
+            CATransaction.setValue(true, forKey: kCATransactionDisableActions)
+            
+            slider.thumbColor = UIColor(hue: convertedHueValue, saturation: value, brightness: 1, alpha: 1)
             slider.thumbSize = finished ? GradientSlider.defaultThumbSize : GradientSlider.defaultThumbSize * self.bigThumbSize
             
             self.didUpdateSaturation.send(value)
+            
+            CATransaction.commit()
         }
         
         brightSlider.actionBlock = { [weak self] slider, value, finished in
             guard let self = self else { return }
+            let convertedBrightValue = self.convert(value, fromOldRange: [slider.minimumValue, slider.maximumValue], toNewRange: [0, 1])
             
+            CATransaction.begin()
+            CATransaction.setValue(true, forKey: kCATransactionDisableActions)
+            
+            slider.thumbColor = UIColor(hue: 0, saturation: 0, brightness: convertedBrightValue, alpha: 1)
             slider.thumbSize = finished ? GradientSlider.defaultThumbSize : GradientSlider.defaultThumbSize * self.bigThumbSize
             
             self.didUpdateBrightness.send(value)
+            
+            CATransaction.commit()
         }
     }
     
