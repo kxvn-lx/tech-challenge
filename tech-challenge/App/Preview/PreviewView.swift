@@ -10,11 +10,12 @@ import MetalKit
 
 class PreviewView: UIView {
     let ciBaseImage = CIImage(cgImage: UIImage(named: "Neon-Source")!.cgImage!)
-    var tempImage: CIImage? { // TempImage will store the edited image so that we can preview them easily
+    var renderingImage: CIImage? { // Rendering Image for Metal to render
         didSet {
             mtkView.draw()
         }
     }
+    private var tempImage: CIImage! // TempImage for long press to preview
     
     private let mtkView = MTKView()
     private var metalDevice: MTLDevice!
@@ -25,6 +26,8 @@ class PreviewView: UIView {
         super.init(frame: frame)
         setupView()
         setupConstraint()
+        
+        setupLongPress()
     }
     
     required init?(coder: NSCoder) {
@@ -33,7 +36,7 @@ class PreviewView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        tempImage = ciBaseImage
+        renderingImage = ciBaseImage
     }
     
     /// Setup the view and layout
@@ -68,13 +71,30 @@ class PreviewView: UIView {
             make.edges.equalToSuperview()
         }
     }
+    
+    /// Setup long press for previewing
+    private func setupLongPress() {
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress))
+        longPressGesture.minimumPressDuration = 0.125
+        self.addGestureRecognizer(longPressGesture)
+    }
+    
+    @objc private func didLongPress(_ sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            guard let renderingImage = renderingImage else { return }
+            tempImage = renderingImage
+            self.renderingImage = ciBaseImage
+        } else if sender.state == .ended {
+            renderingImage = tempImage
+        }
+    }
 }
 
 extension PreviewView: MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) { }
     
     func draw(in view: MTKView) {
-        guard let image = self.tempImage,
+        guard let image = self.renderingImage,
               let texture = self.mtkView.currentDrawable?.texture,
               let buffer = self.metalCommandQueue.makeCommandBuffer(),
               let context = self.ciContext

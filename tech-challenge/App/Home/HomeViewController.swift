@@ -26,7 +26,7 @@ class HomeViewController: UIViewController {
         filterEngine.sourceImage = self.previewView.ciBaseImage
         filterEngine.didFinishRenderImage
             .handleEvents(receiveOutput: { [unowned self] processedImage in
-                self.previewView.tempImage = processedImage
+                self.previewView.renderingImage = processedImage
             })
             .sink { _ in }
             .store(in: &subscriptions)
