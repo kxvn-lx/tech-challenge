@@ -9,7 +9,7 @@ import UIKit
 import Combine
 
 class HomeViewController: UIViewController {
-    private let previewView = PreviewView()
+    private let previewView = PreviewViewViewController()
     private let editorVC = EditorViewController()
     private var filterEngine = FilterEngine()
     private let topLabelView = TopLabelView()
@@ -39,13 +39,13 @@ class HomeViewController: UIViewController {
     }
     
     private func setupView() {
-        view.addSubview(previewView)
+        self.add(previewView)
         view.addSubview(topLabelView)
         self.add(editorVC)
     }
     
     private func setupConstraint() {
-        previewView.snp.makeConstraints { (make) in
+        previewView.view.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
         

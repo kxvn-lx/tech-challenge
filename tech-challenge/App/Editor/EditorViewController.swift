@@ -42,6 +42,8 @@ class EditorViewController: UIViewController {
     private var mStackView: UIStackView!
     private let bigThumbSize: CGFloat = 1.5
     
+    private var blurredEffectView: UIVisualEffectView!
+    
     /// Called whenever there is a new Hue value
     var didUpdateHue = PassthroughSubject<CGFloat, Never>()
     /// Called whenever there is a new Saturation value
@@ -57,10 +59,16 @@ class EditorViewController: UIViewController {
         observeSliders()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // Update the frame of the background blurred view when device layout the subviews (orientation change)
+        blurredEffectView.frame = self.view.bounds
+    }
+    
     private func setupView() {
         // Setup blur
         let blurEffect = UIBlurEffect(style: .dark)
-        let blurredEffectView = UIVisualEffectView(effect: blurEffect)
+        blurredEffectView = UIVisualEffectView(effect: blurEffect)
         blurredEffectView.frame = self.view.bounds
         view.addSubview(blurredEffectView)
         

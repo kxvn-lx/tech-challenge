@@ -1,14 +1,14 @@
 //
-//  PreviewView.swift
+//  PreviewViewViewController.swift
 //  tech-challenge
 //
-//  Created by Kevin Laminto on 5/11/20.
+//  Created by Kevin Laminto on 8/11/20.
 //
 
 import UIKit
 import MetalKit
 
-class PreviewView: UIView {
+class PreviewViewViewController: UIViewController {
     let ciBaseImage = CIImage(cgImage: UIImage(named: "Neon-Source")!.cgImage!)
     var renderingImage: CIImage? { // Rendering Image for Metal to render
         didSet {
@@ -22,26 +22,20 @@ class PreviewView: UIView {
     private var metalCommandQueue: MTLCommandQueue!
     private var ciContext: CIContext!
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         setupView()
         setupConstraint()
         
         setupLongPress()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
+        
         renderingImage = ciBaseImage
     }
     
     /// Setup the view and layout
     private func setupView() {
-        addSubview(mtkView)
+        mtkView.bounds = self.view.bounds
+        view.addSubview(mtkView)
         
         //fetch the default gpu of the device
         metalDevice = MTLCreateSystemDefaultDevice()
@@ -76,7 +70,7 @@ class PreviewView: UIView {
     private func setupLongPress() {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress))
         longPressGesture.minimumPressDuration = 0.125
-        self.addGestureRecognizer(longPressGesture)
+        self.view.addGestureRecognizer(longPressGesture)
     }
     
     @objc private func didLongPress(_ sender: UILongPressGestureRecognizer) {
@@ -90,10 +84,12 @@ class PreviewView: UIView {
     }
 }
 
-extension PreviewView: MTKViewDelegate {
-    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) { }
+extension PreviewViewViewController: MTKViewDelegate {
+    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+    }
     
     func draw(in view: MTKView) {
+        print("Draw")
         guard let image = self.renderingImage,
               let texture = self.mtkView.currentDrawable?.texture,
               let buffer = self.metalCommandQueue.makeCommandBuffer(),
@@ -102,8 +98,8 @@ extension PreviewView: MTKViewDelegate {
         
         // Apply appropriate scaling to fit the native device screen
         let dpi = UIScreen.main.nativeScale
-        let width = self.bounds.width * dpi
-        let height = self.bounds.height * dpi
+        let width = self.view.bounds.width * dpi
+        let height = self.view.bounds.height * dpi
         let rect = CGRect(x: 0, y: 0, width: width, height: height)
         let extent = image.extent
         let xScale = extent.width > 0 ? width  / extent.width  : 1
@@ -119,7 +115,9 @@ extension PreviewView: MTKViewDelegate {
         else { return }
         
         var imageToDraw = scaledImage
-        // Since it is a simulator bug, we flipped it for the sake of it.
+        // Looks like simulator is flipping the image upside down and turns out it is a bug
+        // as per comment in this post https://stackoverflow.com/questions/60164536/flipped-picture-after-render-in-metal
+        // So, I flipped it for the sake of it.
         #if targetEnvironment(simulator)
         imageToDraw = imageToDraw.oriented(.downMirrored)
         #endif
