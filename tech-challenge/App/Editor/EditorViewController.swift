@@ -22,20 +22,15 @@ class EditorViewController: UIViewController {
         let slider = GradientSlider()
         slider.minColor = .gray
         slider.maxColor = UIColor(hue: 0, saturation: 1, brightness: 1, alpha: 1)
-//        slider.maximumValue = 1
-//        slider.minimumValue = -1
-//        slider.value = 0
-//        slider.setGradientVaryingSaturation(hue: 0, brightness: 0)
         return slider
     }()
     private let brightSlider: GradientSlider = {
         let slider = GradientSlider()
+        slider.minimumValue = -0.5
+        slider.maximumValue = 0.5
+        slider.value = 0
         slider.minColor = .black
         slider.maxColor = .white
-//        slider.maximumValue = 1
-//        slider.minimumValue = -1
-//        slider.value = 0
-//        slider.setGradientVaryingBrightness(hue: 0, saturation: 0)
         return slider
     }()
     

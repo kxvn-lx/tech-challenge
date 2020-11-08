@@ -16,6 +16,7 @@
 		0A09875A2553CEF300468153 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0987592553CEF300468153 /* SnapKit */; };
 		0A1DC38B25562D2200D6CC94 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1DC38A25562D2200D6CC94 /* UIStackView.swift */; };
 		0A666EDC2553D00D00953CB7 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A666EDB2553D00D00953CB7 /* PreviewView.swift */; };
+		0A7366012557745800F08F75 /* FilterEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7366002557745800F08F75 /* FilterEngine.swift */; };
 		0ABE38B52553D57E00BC039C /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38B42553D57E00BC039C /* EditorViewController.swift */; };
 		0ABE38BA2553D5BB00BC039C /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38B92553D5BB00BC039C /* UIViewController.swift */; };
 		0ABE38C12553DE2400BC039C /* GradientSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38C02553DE2400BC039C /* GradientSlider.swift */; };
@@ -32,6 +33,7 @@
 		0A09874E2553CDBB00468153 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A1DC38A25562D2200D6CC94 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
 		0A666EDB2553D00D00953CB7 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		0A7366002557745800F08F75 /* FilterEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterEngine.swift; sourceTree = "<group>"; };
 		0ABE38B42553D57E00BC039C /* EditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		0ABE38B92553D5BB00BC039C /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		0ABE38C02553DE2400BC039C /* GradientSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientSlider.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 		0A09873F2553CDBA00468153 /* tech-challenge */ = {
 			isa = PBXGroup;
 			children = (
+				0A7365FF2557744D00F08F75 /* Engine */,
 				0ABE38B82553D5A900BC039C /* Extensions */,
 				0A0987552553CDC800468153 /* App */,
 				0A0987402553CDBA00468153 /* AppDelegate.swift */,
@@ -104,6 +107,14 @@
 				0A666EDB2553D00D00953CB7 /* PreviewView.swift */,
 			);
 			path = Preview;
+			sourceTree = "<group>";
+		};
+		0A7365FF2557744D00F08F75 /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				0A7366002557745800F08F75 /* FilterEngine.swift */,
+			);
+			path = Engine;
 			sourceTree = "<group>";
 		};
 		0ABE38B32553D54F00BC039C /* Editor */ = {
@@ -229,6 +240,7 @@
 				0ABE38B52553D57E00BC039C /* EditorViewController.swift in Sources */,
 				0A0987432553CDBA00468153 /* SceneDelegate.swift in Sources */,
 				0ABE38C12553DE2400BC039C /* GradientSlider.swift in Sources */,
+				0A7366012557745800F08F75 /* FilterEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -11,6 +11,7 @@ import Combine
 class HomeViewController: UIViewController {
     private let previewView = PreviewView()
     private let editorVC = EditorViewController()
+    private var filterEngine = FilterEngine()
     
     private var subscriptions = Set<AnyCancellable>()
     
@@ -21,6 +22,14 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        filterEngine.sourceImage = self.previewView.ciBaseImage
+        filterEngine.didFinishRenderImage
+            .handleEvents(receiveOutput: { [unowned self] processedImage in
+                self.previewView.tempImage = processedImage
+            })
+            .sink { _ in }
+            .store(in: &subscriptions)
         
         setupView()
         setupConstraint()
@@ -50,15 +59,21 @@ class HomeViewController: UIViewController {
         // Called whenever hue slider changed its value
         editorVC.didUpdateHue
             .handleEvents(receiveOutput: { [unowned self] hueValue in
-                let sourceImage = self.previewView.ciBaseImage
-                guard let hueRotateFilter = CIFilter(name: "CIHueAdjust") else { return }
-                
-                hueRotateFilter.setDefaults()
-                hueRotateFilter.setValue(sourceImage, forKey: "inputImage")
-                hueRotateFilter.setValue(hueValue, forKey: "inputAngle")
-                
-                guard let resultImage = hueRotateFilter.value(forKey: "outputImage") as? CIImage else { return }
-                self.previewView.tempImage = resultImage
+                self.filterEngine.hueValue = hueValue
+            })
+            .sink { _ in }
+            .store(in: &subscriptions)
+        
+        editorVC.didUpdateSaturation
+            .handleEvents(receiveOutput: { [unowned self] saturationValue in
+                self.filterEngine.saturationValue = saturationValue
+            })
+            .sink { _ in }
+            .store(in: &subscriptions)
+        
+        editorVC.didUpdateBrightness
+            .handleEvents(receiveOutput: { [unowned self] brightnessValue in
+                self.filterEngine.brightnessValue = brightnessValue
             })
             .sink { _ in }
             .store(in: &subscriptions)
