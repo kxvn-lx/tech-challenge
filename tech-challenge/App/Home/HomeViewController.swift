@@ -51,13 +51,13 @@ class HomeViewController: UIViewController {
         editorVC.didUpdateHue
             .handleEvents(receiveOutput: { [unowned self] hueValue in
                 let sourceImage = self.previewView.ciBaseImage
-                let hueAdjust = CIFilter(name: "CIHueAdjust")
+                guard let hueRotateFilter = CIFilter(name: "CIHueAdjust") else { return }
                 
-                hueAdjust?.setDefaults()
-                hueAdjust?.setValue(sourceImage, forKey: "inputImage")
-                hueAdjust?.setValue(hueValue, forKey: "inputAngle")
+                hueRotateFilter.setDefaults()
+                hueRotateFilter.setValue(sourceImage, forKey: "inputImage")
+                hueRotateFilter.setValue(hueValue, forKey: "inputAngle")
                 
-                guard let resultImage = hueAdjust?.value(forKey: "outputImage") as? CIImage else { return }
+                guard let resultImage = hueRotateFilter.value(forKey: "outputImage") as? CIImage else { return }
                 self.previewView.tempImage = resultImage
             })
             .sink { _ in }

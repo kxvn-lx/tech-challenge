@@ -89,6 +89,7 @@ class EditorViewController: UIViewController {
             guard let self = self else { return }
             
             slider.thumbSize = finished ? GradientSlider.defaultThumbSize : GradientSlider.defaultThumbSize * self.bigThumbSize
+            
             self.didUpdateBrightness.send(value)
         }
     }

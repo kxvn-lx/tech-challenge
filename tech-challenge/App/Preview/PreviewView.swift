@@ -92,9 +92,11 @@ extension PreviewView: MTKViewDelegate {
         let tx = (width - extent.width * scale) / 2
         let ty = (height - extent.height * scale) / 2
         let transform = CGAffineTransform(a: scale, b: 0, c: 0, d: scale, tx: tx, ty: ty)
-        let filter = CIFilter(name: "CIAffineTransform",
-                              parameters: ["inputImage": image, "inputTransform": transform])!
-        let scaledImage = filter.outputImage!
+        guard
+            let transformFilter = CIFilter(name: "CIAffineTransform",
+                                           parameters: ["inputImage": image, "inputTransform": transform]),
+            let scaledImage = transformFilter.outputImage
+        else { return }
         
         var imageToDraw = scaledImage
         // Since it is a simulator bug, we flipped it for the sake of it.

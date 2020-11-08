@@ -19,7 +19,6 @@
 		0ABE38B52553D57E00BC039C /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38B42553D57E00BC039C /* EditorViewController.swift */; };
 		0ABE38BA2553D5BB00BC039C /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38B92553D5BB00BC039C /* UIViewController.swift */; };
 		0ABE38C12553DE2400BC039C /* GradientSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38C02553DE2400BC039C /* GradientSlider.swift */; };
-		0AC3695A2556B98200033B18 /* CustomMetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC369592556B98200033B18 /* CustomMetalView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,7 +35,6 @@
 		0ABE38B42553D57E00BC039C /* EditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		0ABE38B92553D5BB00BC039C /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		0ABE38C02553DE2400BC039C /* GradientSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientSlider.swift; sourceTree = "<group>"; };
-		0AC369592556B98200033B18 /* CustomMetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMetalView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +102,6 @@
 			isa = PBXGroup;
 			children = (
 				0A666EDB2553D00D00953CB7 /* PreviewView.swift */,
-				0AC369592556B98200033B18 /* CustomMetalView.swift */,
 			);
 			path = Preview;
 			sourceTree = "<group>";
@@ -225,7 +222,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A0987452553CDBA00468153 /* HomeViewController.swift in Sources */,
-				0AC3695A2556B98200033B18 /* CustomMetalView.swift in Sources */,
 				0A666EDC2553D00D00953CB7 /* PreviewView.swift in Sources */,
 				0ABE38BA2553D5BB00BC039C /* UIViewController.swift in Sources */,
 				0A1DC38B25562D2200D6CC94 /* UIStackView.swift in Sources */,
