@@ -20,10 +20,22 @@ class EditorViewController: UIViewController {
     }()
     private let satSlider: GradientSlider = {
         let slider = GradientSlider()
+        slider.minColor = .gray
+        slider.maxColor = UIColor(hue: 0, saturation: 1, brightness: 1, alpha: 1)
+//        slider.maximumValue = 1
+//        slider.minimumValue = -1
+//        slider.value = 0
+//        slider.setGradientVaryingSaturation(hue: 0, brightness: 0)
         return slider
     }()
     private let brightSlider: GradientSlider = {
         let slider = GradientSlider()
+        slider.minColor = .black
+        slider.maxColor = .white
+//        slider.maximumValue = 1
+//        slider.minimumValue = -1
+//        slider.value = 0
+//        slider.setGradientVaryingBrightness(hue: 0, saturation: 0)
         return slider
     }()
     
@@ -74,15 +86,31 @@ class EditorViewController: UIViewController {
     private func observeSlider() {
         hueSlider.actionBlock = { [weak self] slider, value, finished in
             guard let self = self else { return }
-            
-            // Update the thumb color to match the value
             // We convert the value to 0 and 1, to match the slider's colour.
             let convertedHueValue = self.convert(value, fromOldRange: [-CGFloat.pi, CGFloat.pi], toNewRange: [0, 1])
+            
+            CATransaction.begin()
+            CATransaction.setValue(true, forKey: kCATransactionDisableActions)
+            
+            //Reflect the new hue in the saturation slider
+            self.satSlider.maxColor = UIColor(hue: convertedHueValue, saturation: 1, brightness: 1, alpha: 1)
+            
+            // Update the thumb color to match the value
             slider.thumbColor = UIColor(hue: convertedHueValue, saturation: 1, brightness: 1, alpha: 1)
-            // Animate the thumb size
+            
             slider.thumbSize = finished ? GradientSlider.defaultThumbSize : GradientSlider.defaultThumbSize * self.bigThumbSize
          
             self.didUpdateHue.send(value)
+            
+            CATransaction.commit()
+        }
+        
+        satSlider.actionBlock = { [weak self] slider, value, finished in
+            guard let self = self else { return }
+            
+            slider.thumbSize = finished ? GradientSlider.defaultThumbSize : GradientSlider.defaultThumbSize * self.bigThumbSize
+            
+            self.didUpdateSaturation.send(value)
         }
         
         brightSlider.actionBlock = { [weak self] slider, value, finished in
