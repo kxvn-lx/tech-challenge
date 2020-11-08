@@ -12,6 +12,7 @@ class HomeViewController: UIViewController {
     private let previewView = PreviewView()
     private let editorVC = EditorViewController()
     private var filterEngine = FilterEngine()
+    private let topLabelView = TopLabelView()
     
     private var subscriptions = Set<AnyCancellable>()
     
@@ -39,6 +40,7 @@ class HomeViewController: UIViewController {
     
     private func setupView() {
         view.addSubview(previewView)
+        view.addSubview(topLabelView)
         self.add(editorVC)
     }
     
@@ -50,6 +52,11 @@ class HomeViewController: UIViewController {
         editorVC.view.snp.makeConstraints { (make) in
             make.width.bottom.equalToSuperview()
             make.height.equalToSuperview().multipliedBy(0.25)
+        }
+        
+        topLabelView.snp.makeConstraints { (make) in
+            make.top.width.equalToSuperview()
+            make.height.equalTo(30)
         }
     }
     

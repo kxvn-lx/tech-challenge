@@ -17,6 +17,7 @@
 		0A1DC38B25562D2200D6CC94 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1DC38A25562D2200D6CC94 /* UIStackView.swift */; };
 		0A666EDC2553D00D00953CB7 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A666EDB2553D00D00953CB7 /* PreviewView.swift */; };
 		0A7366012557745800F08F75 /* FilterEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7366002557745800F08F75 /* FilterEngine.swift */; };
+		0A7366042557841F00F08F75 /* TopLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7366032557841F00F08F75 /* TopLabelView.swift */; };
 		0ABE38B52553D57E00BC039C /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38B42553D57E00BC039C /* EditorViewController.swift */; };
 		0ABE38BA2553D5BB00BC039C /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38B92553D5BB00BC039C /* UIViewController.swift */; };
 		0ABE38C12553DE2400BC039C /* GradientSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38C02553DE2400BC039C /* GradientSlider.swift */; };
@@ -34,6 +35,7 @@
 		0A1DC38A25562D2200D6CC94 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
 		0A666EDB2553D00D00953CB7 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		0A7366002557745800F08F75 /* FilterEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterEngine.swift; sourceTree = "<group>"; };
+		0A7366032557841F00F08F75 /* TopLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopLabelView.swift; sourceTree = "<group>"; };
 		0ABE38B42553D57E00BC039C /* EditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		0ABE38B92553D5BB00BC039C /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		0ABE38C02553DE2400BC039C /* GradientSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientSlider.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				0A0987442553CDBA00468153 /* HomeViewController.swift */,
+				0A7366032557841F00F08F75 /* TopLabelView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 				0A0987412553CDBA00468153 /* AppDelegate.swift in Sources */,
 				0ABE38B52553D57E00BC039C /* EditorViewController.swift in Sources */,
 				0A0987432553CDBA00468153 /* SceneDelegate.swift in Sources */,
+				0A7366042557841F00F08F75 /* TopLabelView.swift in Sources */,
 				0ABE38C12553DE2400BC039C /* GradientSlider.swift in Sources */,
 				0A7366012557745800F08F75 /* FilterEngine.swift in Sources */,
 			);
