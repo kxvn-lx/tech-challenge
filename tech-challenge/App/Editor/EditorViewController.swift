@@ -54,7 +54,7 @@ class EditorViewController: UIViewController {
         
         setupView()
         setupConstraint()
-        observeSlider()
+        observeSliders()
     }
     
     private func setupView() {
@@ -86,7 +86,7 @@ class EditorViewController: UIViewController {
     }
     
     /// Observe all three slider changes
-    private func observeSlider() {
+    private func observeSliders() {
         hueSlider.actionBlock = { [weak self] slider, value, finished in
             guard let self = self else { return }
             // We convert the value to 0 and 1, to match the slider's colour.
