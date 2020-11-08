@@ -86,6 +86,13 @@ class PreviewViewViewController: UIViewController {
 
 extension PreviewViewViewController: MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+        // We put the draw method under an async method since we want it to run on the background,
+        // and not halt the UI.
+        // Without the async method, the view will not be drawn correctly.
+        // To be honest, I am not 100% sure why this is happening - why it is drawn, but incorrectly.
+        DispatchQueue.main.async {
+            view.draw()
+        }
     }
     
     func draw(in view: MTKView) {
@@ -113,7 +120,6 @@ extension PreviewViewViewController: MTKViewDelegate {
                                            parameters: ["inputImage": image, "inputTransform": transform]),
             let scaledImage = transformFilter.outputImage
         else { return }
-        
         var imageToDraw = scaledImage
         // Looks like simulator is flipping the image upside down and turns out it is a bug
         // as per comment in this post https://stackoverflow.com/questions/60164536/flipped-picture-after-render-in-metal
