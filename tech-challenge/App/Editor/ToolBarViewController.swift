@@ -27,6 +27,7 @@ class ToolBarViewController: UIViewController {
     private let previewButtonLabel: UILabel = {
         let previewButtonLabel = UILabel()
         previewButtonLabel.text = "Preview"
+        previewButtonLabel.font = .preferredFont(forTextStyle: .callout)
         previewButtonLabel.textAlignment = .center
         previewButtonLabel.textColor = .lightGray
         previewButtonLabel.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 50))
@@ -80,13 +81,13 @@ class ToolBarViewController: UIViewController {
         previewButtonLabel.addGestureRecognizer(longPress)
         
         let undoButton = ToolbarButton(type: .system)
-        undoButton.setTitle("Preview", for: .normal)
+        undoButton.setTitle("Undo", for: .normal)
         undoButton.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 50))
         undoButton.addTarget(self, action: #selector(toolbarTapped), for: .touchUpInside)
         undoButton.tag = 2
         
         let redoButton = ToolbarButton(type: .system)
-        redoButton.setTitle("Preview", for: .normal)
+        redoButton.setTitle("Redo", for: .normal)
         redoButton.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 50))
         redoButton.addTarget(self, action: #selector(toolbarTapped), for: .touchUpInside)
         redoButton.tag = 3
