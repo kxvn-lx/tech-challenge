@@ -71,6 +71,25 @@ class EditorViewController: UIViewController {
         blurredEffectView.frame = self.view.bounds
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        // When re-orientation is detected, re-calculate constraint.
+        if UIDevice.current.orientation.isLandscape {
+            mStackView.snp.remakeConstraints { (make) in
+                make.center.equalToSuperview()
+                make.width.equalToSuperview().multipliedBy(0.5)
+                make.height.equalToSuperview().multipliedBy(0.75)
+            }
+        } else {
+            mStackView.snp.remakeConstraints { (make) in
+                make.centerY.equalToSuperview()
+                make.right.equalToSuperview().offset(-10)
+                make.width.equalToSuperview().multipliedBy(0.75)
+                make.height.equalToSuperview().multipliedBy(0.75)
+            }
+        }
+    }
+    
     /// Reset all sliders value back to its initial position and value.
     func resetSlider() {
         hueSlider.value = 0
@@ -145,10 +164,19 @@ class EditorViewController: UIViewController {
     }
     
     private func setupConstraint() {
-        mStackView.snp.makeConstraints { (make) in
-            make.center.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.5)
-            make.height.equalToSuperview().multipliedBy(0.75)
+        if UIDevice.current.orientation.isLandscape {
+            mStackView.snp.remakeConstraints { (make) in
+                make.center.equalToSuperview()
+                make.width.equalToSuperview().multipliedBy(0.5)
+                make.height.equalToSuperview().multipliedBy(0.75)
+            }
+        } else {
+            mStackView.snp.remakeConstraints { (make) in
+                make.centerY.equalToSuperview()
+                make.right.equalToSuperview().offset(-10)
+                make.width.equalToSuperview().multipliedBy(0.75)
+                make.height.equalToSuperview().multipliedBy(0.75)
+            }
         }
         
         toolBarVC.view.snp.makeConstraints { (make) in

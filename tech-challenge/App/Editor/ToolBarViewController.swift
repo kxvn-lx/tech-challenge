@@ -24,8 +24,8 @@ class ToolBarViewController: UIViewController {
     }()
     weak var delegate: ToolbarDelegate?
     // Global variable to keep track of its reference
-    private let previewButtonLabel: UILabel = {
-        let previewButtonLabel = UILabel()
+    private let previewButtonLabel: PaddingLabel = {
+        let previewButtonLabel = PaddingLabel()
         previewButtonLabel.text = "Preview"
         previewButtonLabel.font = .preferredFont(forTextStyle: .callout)
         previewButtonLabel.textAlignment = .center
@@ -36,6 +36,9 @@ class ToolBarViewController: UIViewController {
         previewButtonLabel.layer.cornerCurve = .continuous
         previewButtonLabel.layer.masksToBounds = true
         previewButtonLabel.isUserInteractionEnabled = true
+        previewButtonLabel.numberOfLines = 0
+        previewButtonLabel.minimumScaleFactor = 0.2
+        previewButtonLabel.adjustsFontSizeToFitWidth = true
         return previewButtonLabel
     }()
     
