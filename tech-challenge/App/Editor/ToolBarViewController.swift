@@ -101,14 +101,14 @@ class ToolBarViewController: UIViewController {
         undoButton.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 50))
         undoButton.addTarget(self, action: #selector(toolbarTapped), for: .touchUpInside)
         undoButton.tag = 2
-//        undoButton.isEnabled = false
+        undoButton.isEnabled = false
         
         let redoButton = ToolbarButton(type: .system)
         redoButton.setTitle("Redo", for: .normal)
         redoButton.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 50))
         redoButton.addTarget(self, action: #selector(toolbarTapped), for: .touchUpInside)
         redoButton.tag = 3
-//        redoButton.isEnabled = false
+        redoButton.isEnabled = false
         
         mStackView.addArrangedSubview(resetButton)
         mStackView.addArrangedSubview(previewButtonLabel)

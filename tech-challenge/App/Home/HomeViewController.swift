@@ -91,8 +91,8 @@ class HomeViewController: UIViewController {
         editorVC.didReceiveOldValue
             .handleEvents(receiveOutput: { [unowned self] oldSliderValue in
                 self.registerUndoAction(sliderValue: oldSliderValue)
-//                editorVC.toolBarVC.canUndo(undoMngr.canUndo)
-//                editorVC.toolBarVC.canRedo(undoMngr.canRedo)
+                editorVC.toolBarVC.canUndo(undoMngr.canUndo)
+                editorVC.toolBarVC.canRedo(undoMngr.canRedo)
             })
             .sink { _ in}
             .store(in: &subscriptions)
@@ -120,18 +120,21 @@ class HomeViewController: UIViewController {
 // Undo and redo implementations
 extension HomeViewController {
     func registerUndoAction(sliderValue: SliderValue) {
-//        print(sliderValue.value, sliderValue.type)
         self.undoMngr.registerUndo(withTarget: self) { (selfTarget) in
             // undo the value
             switch sliderValue.type {
-            case .brightness: selfTarget.filterEngine.brightnessValue = sliderValue.value
-            case .hue: selfTarget.filterEngine.hueValue = sliderValue.value
-            case .saturation: selfTarget.filterEngine.saturationValue = sliderValue.value
+            case .brightness:
+                selfTarget.removeRegisterUndoAction(sliderValue: .init(value: selfTarget.filterEngine.brightnessValue, type: .brightness))
+                selfTarget.filterEngine.brightnessValue = sliderValue.value
+            case .hue:
+                selfTarget.removeRegisterUndoAction(sliderValue: .init(value: selfTarget.filterEngine.hueValue, type: .hue))
+                selfTarget.filterEngine.hueValue = sliderValue.value
+            case .saturation:
+                selfTarget.removeRegisterUndoAction(sliderValue: .init(value: selfTarget.filterEngine.saturationValue, type: .saturation))
+                selfTarget.filterEngine.saturationValue = sliderValue.value
             }
             // undo the slider
             selfTarget.editorVC.undoRedoSlider(sliderValue: sliderValue)
-            
-            selfTarget.removeRegisterUndoAction(sliderValue: sliderValue)
         }
     }
     
@@ -139,14 +142,18 @@ extension HomeViewController {
         self.undoMngr.registerUndo(withTarget: self) { (selfTarget) in
             // Redo the value
             switch sliderValue.type {
-            case .brightness: selfTarget.filterEngine.brightnessValue = sliderValue.value
-            case .hue: selfTarget.filterEngine.hueValue = sliderValue.value
-            case .saturation: selfTarget.filterEngine.saturationValue = sliderValue.value
+            case .brightness:
+                selfTarget.registerUndoAction(sliderValue: .init(value: selfTarget.filterEngine.brightnessValue, type: .brightness))
+                selfTarget.filterEngine.brightnessValue = sliderValue.value
+            case .hue:
+                selfTarget.registerUndoAction(sliderValue: .init(value: selfTarget.filterEngine.hueValue, type: .hue))
+                selfTarget.filterEngine.hueValue = sliderValue.value
+            case .saturation:
+                selfTarget.registerUndoAction(sliderValue: .init(value: selfTarget.filterEngine.saturationValue, type: .saturation))
+                selfTarget.filterEngine.saturationValue = sliderValue.value
             }
             // Redo the slider
             selfTarget.editorVC.undoRedoSlider(sliderValue: sliderValue)
-            
-            selfTarget.registerUndoAction(sliderValue: sliderValue)
         }
     }
 }
@@ -167,9 +174,13 @@ extension HomeViewController: ToolbarDelegate {
     
     func didTapUndo() {
         undoMngr.undo()
+        editorVC.toolBarVC.canRedo(undoMngr.canRedo)
+        editorVC.toolBarVC.canUndo(undoMngr.canUndo)
     }
     
     func didTapRedo() {
         undoMngr.redo()
+        editorVC.toolBarVC.canRedo(undoMngr.canRedo)
+        editorVC.toolBarVC.canUndo(undoMngr.canUndo)
     }
 }
