@@ -10,7 +10,7 @@ import MetalKit
 
 class PreviewViewViewController: UIViewController {
     let ciBaseImage = CIImage(cgImage: UIImage(named: "Neon-Source")!.cgImage!)
-    var renderingImage: CIImage? { // Rendering Image for Metal to render
+    var renderingImage: CIImage! { // Rendering Image for Metal to render
         didSet {
             mtkView.draw()
         }
@@ -26,8 +26,6 @@ class PreviewViewViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupConstraint()
-        
-        setupLongPress()
         
         renderingImage = ciBaseImage
     }
@@ -64,13 +62,6 @@ class PreviewViewViewController: UIViewController {
         mtkView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
-    }
-    
-    /// Setup long press for previewing
-    private func setupLongPress() {
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress))
-        longPressGesture.minimumPressDuration = 0.125
-        self.view.addGestureRecognizer(longPressGesture)
     }
     
     @objc func didLongPress(_ sender: UILongPressGestureRecognizer) {

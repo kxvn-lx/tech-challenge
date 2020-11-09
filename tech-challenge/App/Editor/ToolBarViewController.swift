@@ -9,21 +9,34 @@ import UIKit
 
 protocol ToolbarDelegate: class {
     func didTapReset()
-    func didTapPreview()
+    func didLongPressPreview(_ sender: UILongPressGestureRecognizer)
     func didTapUndo()
     func didTapRedo()
 }
 
 class ToolBarViewController: UIViewController {
-    private var mStackView: UIStackView = {
+    private let mStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.spacing = 1.5
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         return stackView
     }()
-    private let toolbarNames = ["Reset", "Preview", "Undo", "Redo"]
     weak var delegate: ToolbarDelegate?
+    // Global variable to keep track of its reference
+    private let previewButtonLabel: UILabel = {
+        let previewButtonLabel = UILabel()
+        previewButtonLabel.text = "Preview"
+        previewButtonLabel.textAlignment = .center
+        previewButtonLabel.textColor = .lightGray
+        previewButtonLabel.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 50))
+        previewButtonLabel.backgroundColor = .secondarySystemBackground
+        previewButtonLabel.layer.cornerRadius = 7.5
+        previewButtonLabel.layer.cornerCurve = .continuous
+        previewButtonLabel.layer.masksToBounds = true
+        previewButtonLabel.isUserInteractionEnabled = true
+        return previewButtonLabel
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,17 +52,7 @@ class ToolBarViewController: UIViewController {
     }
     
     private func setupView() {
-        var toolbarButtonTag = 0
-        toolbarNames.forEach({
-            let button = createToolbarButton(withTitle: $0)
-            button.tag = toolbarButtonTag
-            button.isEnabled = toolbarButtonTag != 0
-            
-            mStackView.addArrangedSubview(button)
-            
-            toolbarButtonTag += 1
-        })
-        
+        setupButtons()
         view.addSubview(mStackView)
     }
     
@@ -59,20 +62,53 @@ class ToolBarViewController: UIViewController {
         }
     }
     
-    private func createToolbarButton(withTitle title: String) -> ToolbarButton {
-        let button = ToolbarButton(type: .system)
-        button.setTitle(title, for: .normal)
-        button.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 50))
+    private func setupButtons() {
+        // Create each button individually since we want them to act differently
+        // At first I create a loop, but it made the code more inefficient and introduce more
+        // lines and work.
         
-        button.addTarget(self, action: #selector(toolbarTapped), for: .touchUpInside)
+        let resetButton = ToolbarButton(type: .system)
+        resetButton.setTitle("Reset", for: .normal)
+        resetButton.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 50))
+        resetButton.addTarget(self, action: #selector(toolbarTapped), for: .touchUpInside)
+        resetButton.tag = 0
+        resetButton.isEnabled = false
         
-        return button
+        // Set a 'fake' button to make long press work flawlessly
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressPreview))
+        longPress.minimumPressDuration = 0.125
+        previewButtonLabel.addGestureRecognizer(longPress)
+        
+        let undoButton = ToolbarButton(type: .system)
+        undoButton.setTitle("Preview", for: .normal)
+        undoButton.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 50))
+        undoButton.addTarget(self, action: #selector(toolbarTapped), for: .touchUpInside)
+        undoButton.tag = 2
+        
+        let redoButton = ToolbarButton(type: .system)
+        redoButton.setTitle("Preview", for: .normal)
+        redoButton.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 50))
+        redoButton.addTarget(self, action: #selector(toolbarTapped), for: .touchUpInside)
+        redoButton.tag = 3
+        
+        mStackView.addArrangedSubview(resetButton)
+        mStackView.addArrangedSubview(previewButtonLabel)
+        mStackView.addArrangedSubview(undoButton)
+        mStackView.addArrangedSubview(redoButton)
+    }
+    
+    @objc private func didLongPressPreview(_ sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            previewButtonLabel.backgroundColor = UIColor.systemBackground
+        } else if sender.state == .ended {
+            previewButtonLabel.backgroundColor = UIColor.secondarySystemBackground
+        }
+        delegate?.didLongPressPreview(sender)
     }
     
     @objc private func toolbarTapped(_ sender: ToolbarButton) {
         switch sender.tag {
         case 0: delegate?.didTapReset()
-        case 1: delegate?.didTapPreview()
         case 2: delegate?.didTapUndo()
         case 3: delegate?.didTapRedo()
         default: break

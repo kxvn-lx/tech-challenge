@@ -103,7 +103,8 @@ extension HomeViewController: ToolbarDelegate {
         filterEngine.resetValues()
     }
     
-    func didTapPreview() {
+    func didLongPressPreview(_ sender: UILongPressGestureRecognizer) {
+        previewView.didLongPress(sender)
     }
     
     func didTapUndo() {
