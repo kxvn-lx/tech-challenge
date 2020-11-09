@@ -9,29 +9,49 @@ import Foundation
 import CoreImage
 import Combine
 
-struct FilterEngine {
+class FilterEngine {
     var sourceImage: CIImage? // The image that will be processed/edited
     // Hardcoded the value since we assumed that the value will not change in the future.
     var hueValue: CGFloat = 0 {
         didSet {
             process()
+            observeEditing()
         }
     }
     var saturationValue: CGFloat = 1 {
         didSet {
             process()
+            observeEditing()
         }
     }
     var brightnessValue: CGFloat = 0 {
         didSet {
             process()
+            observeEditing()
         }
     }
     
     /// Called when filter engine has finished processing the image, and ready to be render on screen.
     var didFinishRenderImage = PassthroughSubject<CIImage, Never>()
+    var isEditing = PassthroughSubject<Bool, Never>()
     
     init() { }
+    
+    /// Reset all values back to its initial value
+    func resetValues() {
+        hueValue = 0
+        saturationValue = 1
+        brightnessValue = 0
+    }
+    
+    /// Observe all values and check if the user is editing or not
+    private func observeEditing() {
+        if hueValue != 0 || saturationValue != 1 || brightnessValue != 0 {
+            isEditing.send(true)
+        } else {
+            isEditing.send(false)
+        }
+    }
     
     /// Process the image with any filter's value
     private func process() {

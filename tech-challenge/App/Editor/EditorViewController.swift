@@ -9,12 +9,13 @@ import UIKit
 import Combine
 
 class EditorViewController: UIViewController {
+    // Hardcoded hue and saturation slider thumb color values since we know that it will always be center (and center point, is teal, which is 0.5 in the slider.
     private let hueSlider: GradientSlider = {
         let slider = GradientSlider()
         slider.maximumValue = CGFloat.pi
         slider.minimumValue = -CGFloat.pi
         slider.value = 0
-        slider.thumbColor = UIColor(hue: slider.value, saturation: 1, brightness: 1, alpha: 1)
+        slider.thumbColor = UIColor(hue: 0.5, saturation: 1, brightness: 1, alpha: 1)
         slider.hasRainbow = true
         return slider
     }()
@@ -25,7 +26,8 @@ class EditorViewController: UIViewController {
         slider.value = 1
         slider.minColor =  UIColor(hue: 0, saturation: slider.minimumValue, brightness: 1, alpha: 1)
         slider.maxColor = UIColor(hue: 0, saturation: slider.maximumValue, brightness: 1, alpha: 1)
-        slider.thumbColor = UIColor(hue: 0, saturation: slider.value, brightness: 1, alpha: 1)
+        slider.thumbColor = UIColor(hue: 0.5, saturation: slider.value, brightness: 1, alpha: 1)
+        slider.setGradientVaryingSaturation(hue: 0.5, brightness: 1)
         return slider
     }()
     private let brightSlider: GradientSlider = {
@@ -38,6 +40,8 @@ class EditorViewController: UIViewController {
         slider.maxColor = .white
         return slider
     }()
+    
+    let toolBarVC = ToolBarViewController()
     
     private var mStackView: UIStackView!
     private let bigThumbSize: CGFloat = 1.5
@@ -65,6 +69,17 @@ class EditorViewController: UIViewController {
         blurredEffectView.frame = self.view.bounds
     }
     
+    /// Reset all sliders value back to its initial position and value.
+    func resetSlider() {
+        hueSlider.value = 0
+        hueSlider.thumbColor = UIColor(hue: 0.5, saturation: 1, brightness: 1, alpha: 1)
+        satSlider.thumbColor = UIColor(hue: 0.5, saturation: 1, brightness: 1, alpha: 1)
+        satSlider.setGradientVaryingSaturation(hue: 0.5, brightness: 1)
+        satSlider.value = 1
+        brightSlider.value = 0
+    }
+    
+    // MARK: - Private methods
     private func setupView() {
         // Setup blur
         let blurEffect = UIBlurEffect(style: .dark)
@@ -83,6 +98,8 @@ class EditorViewController: UIViewController {
         mStackView.distribution = .fillEqually
         mStackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mStackView)
+        
+        self.add(toolBarVC)
     }
     
     private func setupConstraint() {
@@ -90,6 +107,13 @@ class EditorViewController: UIViewController {
             make.center.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(0.5)
             make.height.equalToSuperview().multipliedBy(0.75)
+        }
+        
+        toolBarVC.view.snp.makeConstraints { (make) in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().offset(10)
+            make.height.equalToSuperview().multipliedBy(0.9)
+            make.width.equalToSuperview().multipliedBy(0.15)
         }
     }
     

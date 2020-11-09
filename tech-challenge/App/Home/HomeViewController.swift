@@ -23,11 +23,19 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        overrideUserInterfaceStyle = .dark // Dark mode only
         
         filterEngine.sourceImage = self.previewView.ciBaseImage
+        
         filterEngine.didFinishRenderImage
             .handleEvents(receiveOutput: { [unowned self] processedImage in
                 self.previewView.renderingImage = processedImage
+            })
+            .sink { _ in }
+            .store(in: &subscriptions)
+        filterEngine.isEditing
+            .handleEvents(receiveOutput: { [unowned self] isEditing in
+                self.editorVC.toolBarVC.isUserEditing(isEditing)
             })
             .sink { _ in }
             .store(in: &subscriptions)
@@ -42,6 +50,8 @@ class HomeViewController: UIViewController {
         self.add(previewView)
         view.addSubview(topLabelView)
         self.add(editorVC)
+        
+        editorVC.toolBarVC.delegate = self
     }
     
     private func setupConstraint() {
@@ -84,5 +94,23 @@ class HomeViewController: UIViewController {
             })
             .sink { _ in }
             .store(in: &subscriptions)
+    }
+}
+
+extension HomeViewController: ToolbarDelegate {
+    func didTapReset() {
+        editorVC.resetSlider()
+        filterEngine.resetValues()
+    }
+    
+    func didTapPreview() {
+    }
+    
+    func didTapUndo() {
+        print(3)
+    }
+    
+    func didTapRedo() {
+        print(4)
     }
 }

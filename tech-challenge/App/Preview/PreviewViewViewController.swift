@@ -73,7 +73,7 @@ class PreviewViewViewController: UIViewController {
         self.view.addGestureRecognizer(longPressGesture)
     }
     
-    @objc private func didLongPress(_ sender: UILongPressGestureRecognizer) {
+    @objc func didLongPress(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             guard let renderingImage = renderingImage else { return }
             tempImage = renderingImage
