@@ -1,5 +1,5 @@
 # tech-challenge
-
+![preview](./preview.png)]
 ## Library used
 [Snapkit](http://snapkit.io) - Simpler, easier, readable, more compact auto layout DSL.
 
