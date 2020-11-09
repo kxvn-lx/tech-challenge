@@ -20,6 +20,7 @@
 		0A4A2A882557CC1100CD8B9F /* PreviewViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4A2A872557CC1100CD8B9F /* PreviewViewViewController.swift */; };
 		0A7366012557745800F08F75 /* FilterEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7366002557745800F08F75 /* FilterEngine.swift */; };
 		0A7366042557841F00F08F75 /* TopLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7366032557841F00F08F75 /* TopLabelView.swift */; };
+		0A787A6B2559161D0045B3D7 /* SliderValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A787A6A2559161D0045B3D7 /* SliderValue.swift */; };
 		0ABE38B52553D57E00BC039C /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38B42553D57E00BC039C /* EditorViewController.swift */; };
 		0ABE38BA2553D5BB00BC039C /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38B92553D5BB00BC039C /* UIViewController.swift */; };
 		0ABE38C12553DE2400BC039C /* GradientSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABE38C02553DE2400BC039C /* GradientSlider.swift */; };
@@ -40,6 +41,7 @@
 		0A4A2A872557CC1100CD8B9F /* PreviewViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewViewController.swift; sourceTree = "<group>"; };
 		0A7366002557745800F08F75 /* FilterEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterEngine.swift; sourceTree = "<group>"; };
 		0A7366032557841F00F08F75 /* TopLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopLabelView.swift; sourceTree = "<group>"; };
+		0A787A6A2559161D0045B3D7 /* SliderValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderValue.swift; sourceTree = "<group>"; };
 		0ABE38B42553D57E00BC039C /* EditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		0ABE38B92553D5BB00BC039C /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		0ABE38C02553DE2400BC039C /* GradientSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientSlider.swift; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 		0A09873F2553CDBA00468153 /* tech-challenge */ = {
 			isa = PBXGroup;
 			children = (
+				0A787A692559160A0045B3D7 /* Model */,
 				0A7365FF2557744D00F08F75 /* Engine */,
 				0ABE38B82553D5A900BC039C /* Extensions */,
 				0A0987552553CDC800468153 /* App */,
@@ -122,6 +125,14 @@
 				0A7366002557745800F08F75 /* FilterEngine.swift */,
 			);
 			path = Engine;
+			sourceTree = "<group>";
+		};
+		0A787A692559160A0045B3D7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0A787A6A2559161D0045B3D7 /* SliderValue.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		0ABE38B32553D54F00BC039C /* Editor */ = {
@@ -242,6 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A0987452553CDBA00468153 /* HomeViewController.swift in Sources */,
+				0A787A6B2559161D0045B3D7 /* SliderValue.swift in Sources */,
 				0ABE38BA2553D5BB00BC039C /* UIViewController.swift in Sources */,
 				0A1DC38B25562D2200D6CC94 /* UIStackView.swift in Sources */,
 				0A1C02F52558E05C002529A0 /* ToolBarViewController.swift in Sources */,

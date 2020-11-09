@@ -16,6 +16,8 @@ class HomeViewController: UIViewController {
     
     private var subscriptions = Set<AnyCancellable>()
     
+    private var undoMngr = UndoManager()
+    
     /// Hide the status bar
     override var prefersStatusBarHidden: Bool {
         return true
@@ -27,31 +29,19 @@ class HomeViewController: UIViewController {
         
         filterEngine.sourceImage = self.previewView.ciBaseImage
         
-        filterEngine.didFinishRenderImage
-            .handleEvents(receiveOutput: { [unowned self] processedImage in
-                self.previewView.renderingImage = processedImage
-            })
-            .sink { _ in }
-            .store(in: &subscriptions)
-        filterEngine.isEditing
-            .handleEvents(receiveOutput: { [unowned self] isEditing in
-                self.editorVC.toolBarVC.isUserEditing(isEditing)
-            })
-            .sink { _ in }
-            .store(in: &subscriptions)
-        
         setupView()
         setupConstraint()
         
-        observeEditorSliders()
+        observeEditor()
+        observeFilterEngine()
+        
+        editorVC.toolBarVC.delegate = self
     }
     
     private func setupView() {
         self.add(previewView)
         view.addSubview(topLabelView)
         self.add(editorVC)
-        
-        editorVC.toolBarVC.delegate = self
     }
     
     private func setupConstraint() {
@@ -71,11 +61,12 @@ class HomeViewController: UIViewController {
     }
     
     /// Observe the editor's sliders value change
-    private func observeEditorSliders() {
+    private func observeEditor() {
         // We use unowned because we presumes it wil never be nil during its lifetime. (because always active)
         // Called whenever hue slider changed its value
         editorVC.didUpdateHue
             .handleEvents(receiveOutput: { [unowned self] hueValue in
+                // Before we update the value, store the old one for undoManager
                 self.filterEngine.hueValue = hueValue
             })
             .sink { _ in }
@@ -83,6 +74,7 @@ class HomeViewController: UIViewController {
         
         editorVC.didUpdateSaturation
             .handleEvents(receiveOutput: { [unowned self] saturationValue in
+                // Before we update the value, store the old one for undoManager
                 self.filterEngine.saturationValue = saturationValue
             })
             .sink { _ in }
@@ -90,17 +82,83 @@ class HomeViewController: UIViewController {
         
         editorVC.didUpdateBrightness
             .handleEvents(receiveOutput: { [unowned self] brightnessValue in
+                // Before we update the value, store the old one for undoManager
                 self.filterEngine.brightnessValue = brightnessValue
+            })
+            .sink { _ in }
+            .store(in: &subscriptions)
+        
+        editorVC.didReceiveOldValue
+            .handleEvents(receiveOutput: { [unowned self] oldSliderValue in
+                self.registerUndoAction(sliderValue: oldSliderValue)
+//                editorVC.toolBarVC.canUndo(undoMngr.canUndo)
+//                editorVC.toolBarVC.canRedo(undoMngr.canRedo)
+            })
+            .sink { _ in}
+            .store(in: &subscriptions)
+    }
+    
+    private func observeFilterEngine() {
+        // Update the new rendering image
+        filterEngine.didFinishRenderImage
+            .handleEvents(receiveOutput: { [unowned self] processedImage in
+                self.previewView.renderingImage = processedImage
+            })
+            .sink { _ in }
+            .store(in: &subscriptions)
+        
+        // So that 'reset' toolbar button can react accordingly
+        filterEngine.isEditing
+            .handleEvents(receiveOutput: { [unowned self] isEditing in
+                self.editorVC.toolBarVC.isUserEditing(isEditing)
             })
             .sink { _ in }
             .store(in: &subscriptions)
     }
 }
 
+// Undo and redo implementations
+extension HomeViewController {
+    func registerUndoAction(sliderValue: SliderValue) {
+//        print(sliderValue.value, sliderValue.type)
+        self.undoMngr.registerUndo(withTarget: self) { (selfTarget) in
+            // undo the value
+            switch sliderValue.type {
+            case .brightness: selfTarget.filterEngine.brightnessValue = sliderValue.value
+            case .hue: selfTarget.filterEngine.hueValue = sliderValue.value
+            case .saturation: selfTarget.filterEngine.saturationValue = sliderValue.value
+            }
+            // undo the slider
+            selfTarget.editorVC.undoRedoSlider(sliderValue: sliderValue)
+            
+            selfTarget.removeRegisterUndoAction(sliderValue: sliderValue)
+        }
+    }
+    
+    func removeRegisterUndoAction(sliderValue: SliderValue) {
+        self.undoMngr.registerUndo(withTarget: self) { (selfTarget) in
+            // Redo the value
+            switch sliderValue.type {
+            case .brightness: selfTarget.filterEngine.brightnessValue = sliderValue.value
+            case .hue: selfTarget.filterEngine.hueValue = sliderValue.value
+            case .saturation: selfTarget.filterEngine.saturationValue = sliderValue.value
+            }
+            // Redo the slider
+            selfTarget.editorVC.undoRedoSlider(sliderValue: sliderValue)
+            
+            selfTarget.registerUndoAction(sliderValue: sliderValue)
+        }
+    }
+}
+
 extension HomeViewController: ToolbarDelegate {
     func didTapReset() {
         editorVC.resetSlider()
+        editorVC.toolBarVC.canRedo(false)
+        editorVC.toolBarVC.canUndo(false)
         filterEngine.resetValues()
+        
+        undoMngr = UndoManager()
     }
     
     func didLongPressPreview(_ sender: UILongPressGestureRecognizer) {
@@ -108,10 +166,10 @@ extension HomeViewController: ToolbarDelegate {
     }
     
     func didTapUndo() {
-        print(3)
+        undoMngr.undo()
     }
     
     func didTapRedo() {
-        print(4)
+        undoMngr.redo()
     }
 }

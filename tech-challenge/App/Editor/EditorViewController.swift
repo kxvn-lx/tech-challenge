@@ -54,6 +54,8 @@ class EditorViewController: UIViewController {
     var didUpdateSaturation = PassthroughSubject<CGFloat, Never>()
     /// Called whenever there is a new Brightness value
     var didUpdateBrightness = PassthroughSubject<CGFloat, Never>()
+    /// Called whenever the controller receive the old value
+    var didReceiveOldValue = PassthroughSubject<SliderValue, Never>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,10 +75,50 @@ class EditorViewController: UIViewController {
     func resetSlider() {
         hueSlider.value = 0
         hueSlider.thumbColor = UIColor(hue: 0.5, saturation: 1, brightness: 1, alpha: 1)
+        
         satSlider.thumbColor = UIColor(hue: 0.5, saturation: 1, brightness: 1, alpha: 1)
         satSlider.setGradientVaryingSaturation(hue: 0.5, brightness: 1)
         satSlider.value = 1
+        
         brightSlider.value = 0
+        brightSlider.thumbColor = UIColor(hue: 0, saturation: 0, brightness: 0.5, alpha: 1)
+    }
+    
+    /// Roll the slider back in a case of undo or redo.
+    /// Dedicate function since we want to promote separation of concern
+    /// Called when we want to redo or undo the slider
+    func undoRedoSlider(sliderValue: SliderValue) {
+        switch sliderValue.type {
+        case .brightness:
+            let convertedBrightValue = self.convert(
+                sliderValue.value,
+                fromOldRange: [brightSlider.minimumValue, brightSlider.maximumValue],
+                toNewRange: [0, 1]
+            )
+            brightSlider.value = sliderValue.value
+            brightSlider.thumbColor = UIColor(hue: 0, saturation: 0, brightness: convertedBrightValue, alpha: 1)
+            
+        case .hue:
+            let convertedHueValue = self.convert(
+                sliderValue.value,
+                fromOldRange: [hueSlider.minimumValue, hueSlider.maximumValue],
+                toNewRange: [0, 1]
+            )
+            hueSlider.value = sliderValue.value
+            hueSlider.thumbColor = UIColor(hue: convertedHueValue, saturation: 1, brightness: 1, alpha: 1)
+            
+            satSlider.maxColor = UIColor(hue: convertedHueValue, saturation: 1, brightness: 1, alpha: 1)
+            satSlider.thumbColor = UIColor(hue: convertedHueValue, saturation: 1, brightness: 1, alpha: 1)
+            
+        case .saturation:
+            let convertedHueValue = self.convert(
+                self.hueSlider.value,
+                fromOldRange: [self.hueSlider.minimumValue, self.hueSlider.maximumValue],
+                toNewRange: [0, 1]
+            )
+            satSlider.value = sliderValue.value
+            satSlider.thumbColor = UIColor(hue: convertedHueValue, saturation: sliderValue.value, brightness: 1, alpha: 1)
+        }
     }
     
     // MARK: - Private methods
@@ -119,8 +161,13 @@ class EditorViewController: UIViewController {
     
     /// Observe all three slider changes
     private func observeSliders() {
-        hueSlider.actionBlock = { [weak self] slider, value, finished in
+        hueSlider.actionBlock = { [weak self] slider, value, finished, oldValue in
             guard let self = self else { return }
+            // Send the old value for undoManager
+            if let oldValue = oldValue {
+                self.didReceiveOldValue.send(.init(value: oldValue, type: .hue))
+            }
+            
             // We convert the value to 0 and 1, to match the slider's colour.
             let convertedHueValue = self.convert(self.hueSlider.value, fromOldRange: [slider.minimumValue, slider.maximumValue], toNewRange: [0, 1])
             
@@ -140,8 +187,13 @@ class EditorViewController: UIViewController {
             CATransaction.commit()
         }
         
-        satSlider.actionBlock = { [weak self] slider, value, finished in
+        satSlider.actionBlock = { [weak self] slider, value, finished, oldValue in
             guard let self = self else { return }
+            // Send the old value for undoManager
+            if let oldValue = oldValue {
+                self.didReceiveOldValue.send(.init(value: oldValue, type: .saturation))
+            }
+            
             let convertedHueValue = self.convert(
                 self.hueSlider.value,
                 fromOldRange: [self.hueSlider.minimumValue, self.hueSlider.maximumValue],
@@ -159,8 +211,13 @@ class EditorViewController: UIViewController {
             CATransaction.commit()
         }
         
-        brightSlider.actionBlock = { [weak self] slider, value, finished in
+        brightSlider.actionBlock = { [weak self] slider, value, finished, oldValue in
             guard let self = self else { return }
+            // Send the old value for undoManager
+            if let oldValue = oldValue {
+                self.didReceiveOldValue.send(.init(value: oldValue, type: .brightness))
+            }
+            
             let convertedBrightValue = self.convert(value, fromOldRange: [slider.minimumValue, slider.maximumValue], toNewRange: [0, 1])
             
             CATransaction.begin()

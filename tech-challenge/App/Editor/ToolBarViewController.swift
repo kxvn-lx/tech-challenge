@@ -52,6 +52,22 @@ class ToolBarViewController: UIViewController {
         resetButton.isEnabled = isEditing
     }
     
+    /// Determine the enability of the undo button
+    /// - Parameter bool: if can undo, the undo button will simply be enabled. Vice versa
+    func canUndo(_ bool: Bool) {
+        // Hardcode the index since i assume i won't be addding any button(s) in the future
+        guard let undoButton = mStackView.arrangedSubviews[2] as? ToolbarButton else { fatalError("stackView at index 2 should be a button") }
+        undoButton.isEnabled = bool
+    }
+    
+    /// Determine the enability of the redo button
+    /// - Parameter bool: if can redo, the redo button will simply be enabled. Vice versa
+    func canRedo(_ bool: Bool) {
+        // Hardcode the index since i assume i won't be addding any button(s) in the future
+        guard let redoButton = mStackView.arrangedSubviews[3] as? ToolbarButton else { fatalError("stackView at index 2 should be a button") }
+        redoButton.isEnabled = bool
+    }
+    
     private func setupView() {
         setupButtons()
         view.addSubview(mStackView)
@@ -85,12 +101,14 @@ class ToolBarViewController: UIViewController {
         undoButton.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 50))
         undoButton.addTarget(self, action: #selector(toolbarTapped), for: .touchUpInside)
         undoButton.tag = 2
+//        undoButton.isEnabled = false
         
         let redoButton = ToolbarButton(type: .system)
         redoButton.setTitle("Redo", for: .normal)
         redoButton.frame = CGRect(origin: .zero, size: CGSize(width: 100, height: 50))
         redoButton.addTarget(self, action: #selector(toolbarTapped), for: .touchUpInside)
         redoButton.tag = 3
+//        redoButton.isEnabled = false
         
         mStackView.addArrangedSubview(resetButton)
         mStackView.addArrangedSubview(previewButtonLabel)

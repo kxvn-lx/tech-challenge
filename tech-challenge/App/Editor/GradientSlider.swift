@@ -75,8 +75,8 @@ import UIKit
     }
     
     var continuous: Bool = true // if set, value change events are generated any time the value changes due to dragging. default = YES
-    
-    var actionBlock: (GradientSlider, CGFloat, Bool) -> Void = {slider, newValue, finished in }
+    // Added oldValue so we can detect changes directly
+    var actionBlock: (GradientSlider, CGFloat, Bool, CGFloat?) -> Void = {slider, newValue, finished, oldValue in }
     
     @IBInspectable var thickness: CGFloat = defaultThickness {
         didSet {
@@ -324,6 +324,7 @@ import UIKit
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         super.beginTracking(touch, with: event)
         sendActions(for: UIControl.Event.touchDown)
+        actionBlock(self, _value, false, valueForLocation(point: _thumbLayer.position))
         return true
     }
     
@@ -334,7 +335,7 @@ import UIKit
         setValue(newValue, animated: false)
         if continuous {
             sendActions(for: UIControl.Event.valueChanged)
-            actionBlock(self, newValue, false)
+            actionBlock(self, newValue, false, nil)
         }
         return true
     }
@@ -345,7 +346,7 @@ import UIKit
             let newValue = valueForLocation(point: pt)
             setValue(newValue, animated: false)
         }
-        actionBlock(self, _value, true)
+        actionBlock(self, _value, true, nil)
         sendActions(for: [UIControl.Event.valueChanged, UIControl.Event.touchUpInside])
         
     }
