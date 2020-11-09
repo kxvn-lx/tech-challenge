@@ -96,7 +96,6 @@ extension PreviewViewViewController: MTKViewDelegate {
     }
     
     func draw(in view: MTKView) {
-        print("Draw")
         guard let image = self.renderingImage,
               let texture = self.mtkView.currentDrawable?.texture,
               let buffer = self.metalCommandQueue.makeCommandBuffer(),

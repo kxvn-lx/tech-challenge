@@ -10,7 +10,7 @@ import CoreImage
 import Combine
 
 struct FilterEngine {
-    var sourceImage: CIImage?
+    var sourceImage: CIImage? // The image that will be processed/edited
     // Hardcoded the value since we assumed that the value will not change in the future.
     var hueValue: CGFloat = 0 {
         didSet {

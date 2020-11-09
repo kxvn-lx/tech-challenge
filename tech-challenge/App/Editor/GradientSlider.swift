@@ -323,16 +323,8 @@ import UIKit
     
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         super.beginTracking(touch, with: event)
-        let pt = touch.location(in: self)
-        
-        let center = _thumbLayer.position
-        let diameter = max(thumbSize, 44.0)
-        let r = CGRect(x: center.x - diameter/2.0, y: center.y - diameter/2.0, width: diameter, height: diameter)
-        if r.contains(pt) {
-            sendActions(for: UIControl.Event.touchDown)
-            return true
-        }
-        return false
+        sendActions(for: UIControl.Event.touchDown)
+        return true
     }
     
     override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
